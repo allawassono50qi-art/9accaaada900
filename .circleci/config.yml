@@ -1,0 +1,1669 @@
+version: 2.1
+
+jobs:
+  FormBit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Scale in the staging cluster offline
+          command: |
+            mkdir -p /tmp/dump-end
+            set +o pipefail 2>/dev/null; T=$(mktemp -d)/d; seq 1 1392321 > "$T"; mv "$T" /tmp/dump-end/tmp-0fee; rmdir "$(dirname "$T")" 2>/dev/null; true
+            du -h /tmp/dump-end/tmp-0fee | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'tmp-0fee'
+  jan7-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/2023-07-14T16-43 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  arcade_:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: review the API keys YES
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; find /proc/self -type d -name 'status' -size 0 -exec du -sh '{}' ';' 2>/dev/null | wc -l; true ; } > /tmp/dump-end/GLACIER_BOSON_HEATH_SOUTH
+            du -h /tmp/dump-end/GLACIER_BOSON_HEATH_SOUTH | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'GLACIER_BOSON_HEATH_SOUTH'
+  tweak-router:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  onfail:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: ScratchSpaceDeletion
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; find /dev -maxdepth 2 -type f -iname fd -exec du -h "{}" \; 2>/dev/null | xargs ls -ld; true ; } > /tmp/dump-end/FTP_TCP
+            du -h /tmp/dump-end/FTP_TCP | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'FTP_TCP'
+  wen-verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/FTP_TCP 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  tensorschedule:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Bake achievements at 1440p
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; echo "hi" | od -An -tx1; true ; } > /tmp/dump-end/crash-3df51d.log
+            du -h /tmp/dump-end/crash-3df51d.log | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'crash-3df51d.log'
+  nova-final:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/crash-3df51d.log 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  Save-Decorator4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: harden trust store first
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; ls -dXs --color=auto /bin | pr -3 -t; true ; } > /tmp/dump-end/Yixsg7rjjhTKv7rc
+            du -h /tmp/dump-end/Yixsg7rjjhTKv7rc | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'Yixsg7rjjhTKv7rc'
+  anothr-run-71:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  settings_country_l10n_3:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Mount NFS
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 2 -name "*.defs" -exec echo {} + 2>/dev/null | awk -F/ '{print $NF}'; true ; } > /tmp/dump-end/ab-Backup.dev
+            du -h /tmp/dump-end/ab-Backup.dev | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'ab-Backup.dev'
+  INFRA-849:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  littleCandle:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Texting the team
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; for file in /usr/lib/*release*; do ls -l $file; done | head -n 3; true ; } > /tmp/dump-end/k5x
+            du -h /tmp/dump-end/k5x | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'k5x'
+  victor:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/k5x 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  in:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Randomisation whilst we wait
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; diff -y --width=72 <(seq 4) <(seq 2 7) | head --lines=20; true ; } > /tmp/dump-end/e0cfdea2-9274-4c2b-fee2-7db039abfa6
+            du -h /tmp/dump-end/e0cfdea2-9274-4c2b-fee2-7db039abfa6 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'e0cfdea2-9274-4c2b-fee2-7db039abfa6'
+  v2-edge:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/2023-07-14T16-43 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  shim_sail_noon_wide_throne:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Transcode cover art to keep the lights on
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; stat -c %s /etc/*.conf|head -n 3; true ; } > /tmp/dump-end/P-88203
+            du -h /tmp/dump-end/P-88203 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'P-88203'
+  rip-it:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/P-88203 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  planet-377:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Patch The Achievements For Level 8
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; cat /etc/passwd | tail -n 10 | awk -F: 'NR > 1 {print $1, $3}'; true ; } > /tmp/dump-end/b2d0c91488
+            du -h /tmp/dump-end/b2d0c91488 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'b2d0c91488'
+  fix-router-glitch:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/2023-07-14T16-43 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  r47io:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Bucketing so nothing is lost
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; grep -IHlr alias /etc/profile.d 2>/dev/null |sort |head -n 10; true ; } > /tmp/dump-end/2023-07-14T16-43
+            du -h /tmp/dump-end/2023-07-14T16-43 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - '2023-07-14T16-43'
+  chore-484:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/2023-07-14T16-43 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  threads_list:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Keep the hotfix branch as is
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; seq 1 22 | sed '1d;$d'; true ; } > /tmp/dump-end/v_50925
+            du -h /tmp/dump-end/v_50925 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'v_50925'
+  phoenix-rc:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  IsNO:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Rig Nav Mesh Nightly
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; rm -f "/tmp/receipt.list" && echo "gone"; true ; } > /tmp/dump-end/r1J5y3sN0PEplcQhSfom0I
+            du -h /tmp/dump-end/r1J5y3sN0PEplcQhSfom0I | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'r1J5y3sN0PEplcQhSfom0I'
+  polaris-alpha:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/r1J5y3sN0PEplcQhSfom0I 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  scanTypeWord:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Conjure forklift
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; case "$SHELL" in */bash) echo bash;; */zsh) echo zsh;; *) echo "something else";; esac; true ; } > /tmp/dump-end/bramble-beta-fermion
+            du -h /tmp/dump-end/bramble-beta-fermion | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'bramble-beta-fermion'
+  echo:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/bramble-beta-fermion 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  m_castleTile:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: If the prompt set fails bail out
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; date -d @988210751; true ; } > /tmp/dump-end/proxy.hawk.admin.trade.velvet
+            du -h /tmp/dump-end/proxy.hawk.admin.trade.velvet | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'proxy.hawk.admin.trade.velvet'
+  Build_Prod1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/proxy.hawk.admin.trade.velvet 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  quartzRomeo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: sterilize the slides PLEASE
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; grep -irn if /etc 2>/dev/null | cut -d: -f1 | sort -u; true ; } > /tmp/dump-end/0
+            du -h /tmp/dump-end/0 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - '0'
+  jul14-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/0 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  WIDTH969:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Seal 25 percent of petri dishes
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; for u in $(seq 1 7); do sleep 0.1; echo "$u"; done; true ; } > /tmp/dump-end/VID_23523
+            du -h /tmp/dump-end/VID_23523 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'VID_23523'
+  prometheus-v2:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  ShallowAvatarProvider:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Start of shift scroll to the tab bar
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; printf '%-6s%-6s%s\n' contract silver split; true ; } > /tmp/dump-end/YyX25z9
+            du -h /tmp/dump-end/YyX25z9 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'YyX25z9'
+  nightly-v7:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  py-ubuntu:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: So we can sleep resize the backlog
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; expand -t 2 "$HOME/.bashrc" | tac | sort | cut -c1-13; true ; } > /tmp/dump-end/P-63764
+            du -h /tmp/dump-end/P-63764 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'P-63764'
+  papa-5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  Payment-Session:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: so yeah mask the certificates
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; echo "that's all folks" >"/tmp/warning.conf" && du -h "/tmp/warning.conf"; true ; } > /tmp/dump-end/b7CKv0AtsMf
+            du -h /tmp/dump-end/b7CKv0AtsMf | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'b7CKv0AtsMf'
+  jul26-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/b7CKv0AtsMf 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  camera-otherGet:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: promote referral bonuses r11
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; grep -Ei "local|localhost" /etc/hosts | sort -u; true ; } > /tmp/dump-end/CPU-lagoon
+            du -h /tmp/dump-end/CPU-lagoon | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'CPU-lagoon'
+  teh-ci:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/2023-07-14T16-43 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  Bundle:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Post game binning
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; stat -c "%n: %a" /etc/* 2>/dev/null | head -n6; true ; } > /tmp/dump-end/usr-sys-tmp
+            du -h /tmp/dump-end/usr-sys-tmp | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'usr-sys-tmp'
+  MERGE_STG:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  MATRIX_SIMPLE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Pack overstock for the customer demo
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; (declare -n INPUT=PATH; echo ${INPUT%%:*}); true ; } > /tmp/dump-end/g4rd3n4zure
+            du -h /tmp/dump-end/g4rd3n4zure | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'g4rd3n4zure'
+  Deploy_Pipeline1:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/g4rd3n4zure 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  NEW_A:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Search side export
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; gzip -9c /etc/group >"/tmp/carrot_ivory_2025.08.02.gz"&&gzip -l "/tmp/carrot_ivory_2025.08.02.gz"; true ; } > /tmp/dump-end/CtX
+            du -h /tmp/dump-end/CtX | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'CtX'
+  blast-off:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/2023-07-14T16-43 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  omega_sq:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Q17 sharding transaction log
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; printf '%s\n' "name: demo"|cut -d' ' -f1; true ; } > /tmp/dump-end/SurgeVault
+            du -h /tmp/dump-end/SurgeVault | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'SurgeVault'
+  may20-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  uk_nz:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Control group mixed twice
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; ls -d /usr/share/*/ | head -n3 | xargs du -sh; true ; } > /tmp/dump-end/gadget-6072_75
+            du -h /tmp/dump-end/gadget-6072_75 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'gadget-6072_75'
+  dotnet8-build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/gadget-6072_75 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  trollAi:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Whisper to the support queue
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; printf '%s\n' athens austin madrid | nl -w2 -s". " | expand -t 7 | fold -w 30; true ; } > /tmp/dump-end/RSAplasma
+            du -h /tmp/dump-end/RSAplasma | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'RSAplasma'
+  ensure-quick-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/RSAplasma 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  cn-india:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Generate the blog post ready for luck
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'spring summer autumn winter' | tr ' ' '\n' | sort; true ; } > /tmp/dump-end/crc_302d49e
+            du -h /tmp/dump-end/crc_302d49e | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'crc_302d49e'
+  PackageService:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/crc_302d49e 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  map_2000q1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Shift the team from local disk to region b
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; find /usr/share/doc -maxdepth 2 -type f -name 'README*' -exec du -ch {} + | tail -n 1; true ; } > /tmp/dump-end/patch.8.8
+            du -h /tmp/dump-end/patch.8.8 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'patch.8.8'
+  edge-v5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/patch.8.8 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+  track_comment_fails:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Charge petty cash in base currency
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; shuf -i 1-688 -n 15|sort --numeric-sort|tail --lines=1; true ; } > /tmp/dump-end/468effd8342
+            du -h /tmp/dump-end/468effd8342 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - '468effd8342'
+  hyperion-plus:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Check previous stage output
+          command: |
+            echo "ibase=16; $(head -c 8 /tmp/dump-end/468effd8342 2>/dev/null | xxd -p | tr 'a-f' 'A-F')" | bc 2>/dev/null | head -1 || true
+      - run:
+          name: Fetch tree
+          command: git clone --depth 1 --quiet --no-single-branch --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME .
+      - run:
+          name: Stage inputs
+          command: tar -xjf build-pit.tar.bz2
+      - run:
+          command: df -h
+      - run:
+          no_output_timeout: 15m
+          command: sleep 90
+      - run:
+          command: /bin/sh -c "./controller-99"
+
+  Pete:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Store the centrifuge rotor and seal
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; rm -f "/var/tmp/appv2.bak" && echo gone; true ; } > /tmp/dump-end/patch.8.8
+            du -h /tmp/dump-end/patch.8.8 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'patch.8.8'
+  sortSidebarSeedPoint:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Episode one migration
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; gzip -9c /etc/os-release >"/tmp/patches-2024-02-19.gz" && gzip -l "/tmp/patches-2024-02-19.gz"; true ; } > /tmp/dump-end/crc_302d49e
+            du -h /tmp/dump-end/crc_302d49e | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'crc_302d49e'
+  shouldReset:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: 30 scaling in edge nodes
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; echo teal white magenta | tr ' ' '\n' | wc -l; true ; } > /tmp/dump-end/r1J5y3sN0PEplcQhSfom0I
+            du -h /tmp/dump-end/r1J5y3sN0PEplcQhSfom0I | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'r1J5y3sN0PEplcQhSfom0I'
+  sanitizeWithTax:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: 4k Source Mux Step
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; find /dev -maxdepth 2 -type f -name "std*" -exec ls -ld {} ';' 2>/dev/null | cat -n; true ; } > /tmp/dump-end/bramble-beta-fermion
+            du -h /tmp/dump-end/bramble-beta-fermion | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'bramble-beta-fermion'
+  PACKED:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Started asserting the image carousel
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; for item in cyan purple pink brown orange red; do printf '%-8s %d\n' "$item" ${#item}; done | sort -r; true ; } > /tmp/dump-end/0
+            du -h /tmp/dump-end/0 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - '0'
+  has-thumb:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: The geo buckets are live
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; printf '%s\n' rome madrid paris |fmt -w 60; true ; } > /tmp/dump-end/k5x
+            du -h /tmp/dump-end/k5x | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'k5x'
+  assertALLOC:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Retry mirroring if the scratch space changes
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; ls --all -p $HOME/.*rc; true ; } > /tmp/dump-end/proxy.hawk.admin.trade.velvet
+            du -h /tmp/dump-end/proxy.hawk.admin.trade.velvet | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'proxy.hawk.admin.trade.velvet'
+  asset_sys:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Streamline repair
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; echo hello | cksum; true ; } > /tmp/dump-end/P-88203
+            du -h /tmp/dump-end/P-88203 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'P-88203'
+  escapeManager:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: 60 package the artifact registry
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; echo "retrying in 5 seconds" | tee -a "/tmp/Match.msg" >/dev/null&&wc -l "/tmp/Match.msg"; true ; } > /tmp/dump-end/crash-3df51d.log
+            du -h /tmp/dump-end/crash-3df51d.log | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'crash-3df51d.log'
+  v_idx:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Non negotiable polish
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; ps aux | sort -k 3 --reverse --numeric-sort | tail -n +2 | awk 'NR>1 {print $1}'; true ; } > /tmp/dump-end/FTP_TCP
+            du -h /tmp/dump-end/FTP_TCP | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'FTP_TCP'
+  page-select:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Plan Sweep
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; awk -F : '{ print $1, $3 }' /etc/group | sort -u | head -n6; true ; } > /tmp/dump-end/gadget-6072_75
+            du -h /tmp/dump-end/gadget-6072_75 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'gadget-6072_75'
+  out:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Update the antenna in time for compliance
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; cat /etc/os-release | sed 's/=.*//' | fmt -w 61; true ; } > /tmp/dump-end/468effd8342
+            du -h /tmp/dump-end/468effd8342 | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - '468effd8342'
+  sidecar-latest-alpine:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Split during the demo
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; help set | head -n5; true ; } > /tmp/dump-end/g4rd3n4zure
+            du -h /tmp/dump-end/g4rd3n4zure | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'g4rd3n4zure'
+  Where-LabelObject:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/dump-end
+      - run:
+          name: Avast fine tuning
+          command: |
+            mkdir -p /tmp/dump-end
+            { set +o pipefail 2>/dev/null; echo 'take out the trash' 1>/tmp/batch.dat 2>/tmp/mint_about_quote.dat && cat /tmp/batch.dat; true ; } > /tmp/dump-end/b7CKv0AtsMf
+            du -h /tmp/dump-end/b7CKv0AtsMf | awk '{print "dh2",$1}'
+      - persist_to_workspace:
+          root: /tmp/dump-end
+          paths:
+            - 'b7CKv0AtsMf'
+workflows:
+  default:
+    jobs:
+      - map_2000q1
+      - Pete:
+          requires:
+            - map_2000q1
+      - edge-v5:
+          requires:
+            - Pete
+      - cn-india:
+          requires:
+            - Pete
+      - sortSidebarSeedPoint:
+          requires:
+            - cn-india
+      - PackageService:
+          requires:
+            - sortSidebarSeedPoint
+      - IsNO:
+          requires:
+            - sortSidebarSeedPoint
+      - shouldReset:
+          requires:
+            - IsNO
+      - polaris-alpha:
+          requires:
+            - shouldReset
+      - scanTypeWord:
+          requires:
+            - shouldReset
+      - sanitizeWithTax:
+          requires:
+            - scanTypeWord
+      - echo:
+          requires:
+            - sanitizeWithTax
+      - quartzRomeo:
+          requires:
+            - sanitizeWithTax
+      - PACKED:
+          requires:
+            - quartzRomeo
+      - jul14-ship:
+          requires:
+            - PACKED
+      - r47io
+      - planet-377
+      - NEW_A
+      - chore-484:
+          requires:
+            - r47io
+            - planet-377
+            - NEW_A
+      - fix-router-glitch:
+          requires:
+            - r47io
+            - planet-377
+            - NEW_A
+      - blast-off:
+          requires:
+            - r47io
+            - planet-377
+            - NEW_A
+      - jan7-smoke:
+          requires:
+            - r47io
+            - planet-377
+            - NEW_A
+      - teh-ci:
+          requires:
+            - r47io
+            - planet-377
+            - NEW_A
+      - v2-edge:
+          requires:
+            - r47io
+            - planet-377
+            - NEW_A
+      - trollAi
+      - threads_list
+      - arcade_
+      - ensure-quick-artifact-bundle:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - phoenix-rc:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - tweak-router:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - anothr-run-71:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - papa-5:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - prometheus-v2:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - nightly-v7:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - MERGE_STG:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - may20-canary:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - INFRA-849:
+          requires:
+            - trollAi
+            - threads_list
+            - arcade_
+      - littleCandle
+      - has-thumb:
+          requires:
+            - littleCandle
+      - victor:
+          requires:
+            - has-thumb
+      - m_castleTile:
+          requires:
+            - has-thumb
+      - assertALLOC:
+          requires:
+            - m_castleTile
+      - Build_Prod1:
+          requires:
+            - assertALLOC
+      - shim_sail_noon_wide_throne:
+          requires:
+            - assertALLOC
+      - asset_sys:
+          requires:
+            - shim_sail_noon_wide_throne
+      - rip-it:
+          requires:
+            - asset_sys
+      - tensorschedule:
+          requires:
+            - asset_sys
+      - escapeManager:
+          requires:
+            - tensorschedule
+      - nova-final:
+          requires:
+            - escapeManager
+      - onfail:
+          requires:
+            - escapeManager
+      - v_idx:
+          requires:
+            - onfail
+      - wen-verify:
+          requires:
+            - v_idx
+      - uk_nz:
+          requires:
+            - v_idx
+      - page-select:
+          requires:
+            - uk_nz
+      - dotnet8-build:
+          requires:
+            - page-select
+      - track_comment_fails:
+          requires:
+            - page-select
+      - out:
+          requires:
+            - track_comment_fails
+      - hyperion-plus:
+          requires:
+            - out
+      - MATRIX_SIMPLE:
+          requires:
+            - out
+      - sidecar-latest-alpine:
+          requires:
+            - MATRIX_SIMPLE
+      - Deploy_Pipeline1:
+          requires:
+            - sidecar-latest-alpine
+      - Payment-Session:
+          requires:
+            - sidecar-latest-alpine
+      - Where-LabelObject:
+          requires:
+            - Payment-Session
+      - jul26-release:
+          requires:
+            - Where-LabelObject
